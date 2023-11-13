@@ -1,0 +1,23 @@
+{
+  "name": "recipegenius",
+  "version": "1.0.0",
+  "description": "RecipeGenius, a user-centric web app, minimizes food waste by suggesting recipes from available ingredients. With features like barcode scanning, scheduled recipes, and budget tracking, it simplifies meal planning for users of all levels.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PPicklee/RecipeGenius.git"
+  },
+  "author": "Julio Ortega, John Farrell, Chris Veilleux",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PPicklee/RecipeGenius/issues"
+  },
+  "homepage": "https://github.com/PPicklee/RecipeGenius#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
