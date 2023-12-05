@@ -3,7 +3,8 @@ const apiService = require('../services/recipeGeniusAPIService');
 
 class Recipe {
     constructor(
-        name,
+        _id,
+        recipeName,
         videoLink,
         servings,
         estimatedCost,
@@ -13,7 +14,8 @@ class Recipe {
         steps,
         ingredientQuantities
     ) {
-        this.name = name;
+        this._id = _id;
+        this.name = recipeName;
         this.videoLink = videoLink;
         this.servings = servings;
         this.estimatedCost = estimatedCost;
@@ -26,6 +28,7 @@ class Recipe {
 
     static createRecipeFromData(recipeData) {
         return new Recipe(
+          recipeData._id || '',
           recipeData.recipeName || 'Unnamed Recipe',
           recipeData.videoLink || '',
           recipeData.servings || 1,

@@ -6,6 +6,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 //=============IMPORT PAGES=============
 import Home from './pages/Home';
 import Register from './pages/Register';
+import Recipe from './pages/Recipe';
 
 function App() {
     //=============VARIABLES=============
@@ -54,6 +55,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="/register" element={<Register/>}/>
+                        <Route path="/recipe/:name" element={<Recipe/>} />
                     </Routes>
                 </div>
             </main>

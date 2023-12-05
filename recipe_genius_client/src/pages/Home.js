@@ -15,8 +15,6 @@ const Main = () => {
     const [selectedIngredients, setSelectedIngredients] = useState("");
     const [selectedDietaryRestrictionsSatisfied, setSelectedDietaryRestrictionsSatisfied] = useState("");
     const [searchDietaryRestrictionsSatisfied, setSearchDietaryRestrictionsSatisfied] = useState("");
-    const [searchDietaryRestrictions, setSearchDietaryRestrictions] = useState("");
-    const [selectedDietaryRestrictions, setSelectedDietaryRestrictions] = useState("");
     const [searchAppliancesUsed, setSearchAppliancesUsed] = useState("");
     const [selectedAppliancesUsed, setSelectedAppliancesUsed] = useState("");
     const [searchEstimatedCost, setSearchEstimatedCost] = useState("");
@@ -78,6 +76,11 @@ const Main = () => {
                 if (dietaryRestrictionsSatisfied) searchData.dietaryRestrictionsSatisfied = dietaryRestrictionsSatisfied;
                 if (appliancesUsed) searchData.appliancesUsed = appliancesUsed;
                 if (estimatedCost) searchData.estimatedCost = estimatedCost;
+
+                // If no fields are filled, set a default maximum cost
+                if (!recipeName && !ingredients && !dietaryRestrictionsSatisfied && !appliancesUsed && !estimatedCost) {
+                    searchData.estimatedCost = "1000";
+                }
 
                 console.log('Sending request with data:', searchData);
                 const response = await fetch('http://localhost:3001/search', {
@@ -148,13 +151,20 @@ const Main = () => {
                 </div>
                 <div className="search-results">
                     <Row className="recipe-list">
-                        {recipeList.map((recipe, index) => (
-                            <Col className="recipe" lg={5} key={index}>
-                                <div>
-                                    <h2>{recipe.name}</h2>
-                                </div>
-                            </Col>
-                        ))}
+                        {recipeList.map((recipe, index) => {
+                            console.log(recipe);
+                            const recipeNameUrlFriendly = encodeURIComponent(recipe.name); // Make the recipe name URL-friendly
+                            console.log(`/recipe/${recipeNameUrlFriendly}`); // Log the generated URL
+                            return (
+                                <Col className="recipe" lg={5} key={index}>
+                                    <div>
+                                        <h2>
+                                            <Link to={`/recipe/${recipeNameUrlFriendly}`}>{recipe.name}</Link>
+                                        </h2>
+                                    </div>
+                                </Col>
+                            );
+                        })}
                     </Row>
                 </div>
             </div>

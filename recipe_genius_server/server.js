@@ -45,6 +45,12 @@ app.get('/message', (req, res) => {
     res.json({ message: "Hello from server!" });
 });
 
+app.get('/recipe/:id', async(req,res)=>{
+    const { id } = req.params;
+    const recipe = await Recipe.getById(id);
+    res.json({recipe});
+});
+
 app.post('/search', async(req,res)=> {
     console.log("Search Called")
     const { recipeName, limitToInventory, ingredients, dietaryRestrictionsSatisfied, appliancesUsed, estimatedCost } = req.body;
