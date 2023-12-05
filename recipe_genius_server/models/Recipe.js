@@ -40,40 +40,36 @@ class Recipe {
       
   
     static async search(filterNames, filterValues) {
-        try {
-          const recipesList = [];
-    
-          // Ensure filterNames and filterValues have the same length
-          if (filterNames.length !== filterValues.length) {
-            throw new Error('Filter names and values must have the same length');
-          }
-    
-          for (let i = 0; i < filterNames.length; i++) {
-            const filterName = filterNames[i];
-            const filterValue = filterValues[i];
-    
-            // Query the API using filterName and filterValue
-            const apiResponse = await apiService.invokeApi(filterName, filterValue);
-    
-            const recipesFromApi = Array.isArray(apiResponse.recipes)
-                ? apiResponse.recipes.map(recipeData => Recipe.createRecipeFromData(recipeData))
-                : [];
-
-            // Add recipes to the list
-            recipesList.push(...recipesFromApi);
-          }
-
-
-        // After the loop, remove duplicates based on the 'name' property
-        const uniqueRecipesList = recipesList.filter((recipe, index, self) => {
-            return self.findIndex((r) => Recipe.areRecipesEqual(recipe, r)) === index;
-        });
-    
-          return uniqueRecipesList;
-        } catch (error) {
-          console.error('Error in search:', error.message);
-          throw error;
+      try {
+        // Ensure filterNames and filterValues have the same length
+        if (filterNames.length !== filterValues.length) {
+          throw new Error('Filter names and values must have the same length');
         }
+
+        let results = [];
+        for (let i = 0; i < filterNames.length; i++) {
+          const filterName = filterNames[i];
+          const filterValue = filterValues[i];
+
+          // Skip this iteration if filterValue is not provided
+          if (!filterValue) continue;
+
+          const apiResponse = await apiService.invokeApi(filterName, filterValue);
+          const newRecipes = Array.isArray(apiResponse.recipes)
+            ? apiResponse.recipes.map(recipeData => Recipe.createRecipeFromData(recipeData))
+            : [];
+
+          results.push(newRecipes);
+        }
+
+        // Find the intersection of all result sets
+        const intersection = results[0].filter(a => results.every(b => b.some(c => c.name === a.name)));
+
+        return intersection;
+      } catch (error) {
+        console.error(`Failed to search for recipes: ${error}`);
+        return [];
+      }
     }
     
     getCosts() {
@@ -92,7 +88,7 @@ class Recipe {
     }
 
     static areRecipesEqual(recipe1, recipe2) {
-        return recipe1.name === recipe2.name; // Adjust based on your equality criteria
+        return recipe1.name === recipe2.name;
     }
   }
   

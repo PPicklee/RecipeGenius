@@ -101,3 +101,23 @@ button:hover {
   padding: 20px;
 }
 
+.fields-container {
+  width: 50%;
+  margin: 0 auto; /* centers the box */
+  border: 1px solid #000; /* add a border */
+  padding: 20px; /* add some padding */
+  box-sizing: border-box; /* makes sure the padding and border are included in the width */
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .fields-container {
+    width: 100%;
+  }
+}

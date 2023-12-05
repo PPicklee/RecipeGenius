@@ -47,25 +47,16 @@ app.get('/message', (req, res) => {
 
 app.post('/search', async(req,res)=> {
     console.log("Search Called")
-    const { searchInput, limitToInventory } = req.body;
+    const { recipeName, limitToInventory, ingredients, dietaryRestrictionsSatisfied, appliancesUsed, estimatedCost } = req.body;
 
-    const filterNames = []
-    const filterValues = []
+    const filterNames = ['recipeName', 'ingredients', 'dietaryRestrictionsSatisfied', 'appliancesUsed', 'estimatedCost'];
+    const filterValues = [recipeName, ingredients, dietaryRestrictionsSatisfied, appliancesUsed, estimatedCost];
 
-    console.log(searchInput);
-    // if (searchInput !== '') {
-    filterNames.push('ingredients');
-    filterValues.push(searchInput);
-    // }
-    console.log(filterValues)
-    // const filterNames = ['dietaryRestrictionsSatisfied', 'ingredients'];
-    // const filterValues = ['vegan|halal|dairy-free', 'salt|pepper'];
+    console.log("filterValues:", filterValues)
 
     const response = await Recipe.search(filterNames, filterValues);
     const recipes = response;
-    // console.log(recipes);
     res.json({recipes});
-    // res.send('Hello, world!');
 });
 
 // Example code to reference during development
