@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  /*text-align: center;*/
 }
 
 .App-logo {
@@ -15,12 +15,12 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 5%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  /*font-size: calc(10px + 1vmin);*/
   color: white;
 }
 
@@ -68,7 +68,7 @@ header {
 }
 
 .login-form {
-  max-width: 400px;
+  max-width: 40%;
   margin: 0 auto;
   align-items: end;
 }
@@ -79,9 +79,11 @@ label {
 }
 
 input {
-  width: 100%;
-  padding: 8px;
+  width: auto;
+  padding: 5pt;
   margin-bottom: 10px;
+  margin-left: 1pt;
+  box-sizing: border-box;
 }
 
 button {
@@ -90,6 +92,7 @@ button {
   padding: 10px;
   border: none;
   cursor: pointer;
+  margin-left: 100px;
 }
 
 button:hover {
@@ -109,15 +112,42 @@ button:hover {
   box-sizing: border-box; /* makes sure the padding and border are included in the width */
 }
 
-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-}
-
 @media (max-width: 600px) {
   .fields-container {
     width: 100%;
   }
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+.ingredient-search-result{
+  width: 100%;
+  list-style-type: none;
+  margin: 1pt;
+}
+
+.ingredient-search-selected{
+    /*width: 100%;*/
+    list-style-type: none;
+    margin: 5pt;
+}
+
+.ingredient-search-searchbar{
+    width: 100%;
+    margin: 5pt;
+}
+
+.inventory-item{
+  width: 100%;
+  list-style-type: none;
+  margin: 5pt;
+  align-items: stretch;
+  justify-content: stretch;
+  justify-items:stretch;
+  /*display: flex;*/
+  display: inline-block;
+  zoom: 1;
+  text-align: center;
 }
