@@ -1,5 +1,5 @@
 .App {
-  /*text-align: center;*/
+  text-align: center;
 }
 
 .App-logo {
@@ -79,9 +79,9 @@ label {
 }
 
 input {
-  width: auto;
+  width: inherit;
   padding: 5pt;
-  margin-bottom: 10px;
+  /*margin-bottom: 10px;*/
   margin-left: 1pt;
   box-sizing: border-box;
 }
@@ -92,7 +92,7 @@ button {
   padding: 10px;
   border: none;
   cursor: pointer;
-  margin-left: 100px;
+  /*margin-left: 100px;*/
 }
 
 button:hover {
@@ -105,7 +105,8 @@ button:hover {
 }
 
 .fields-container {
-  width: 50%;
+  width: auto;
+  text-align: center;
   margin: 0 auto; /* centers the box */
   border: 1px solid #000; /* add a border */
   padding: 20px; /* add some padding */
@@ -114,8 +115,12 @@ button:hover {
 
 @media (max-width: 600px) {
   .fields-container {
-    width: 100%;
+    width: auto;
   }
+}
+
+.search-bar-btn{
+  width: 100%;
 }
 
 h1, h2, h3 {
@@ -141,13 +146,31 @@ h1, h2, h3 {
 
 .inventory-item{
   width: 100%;
-  list-style-type: none;
-  margin: 5pt;
-  align-items: stretch;
-  justify-content: stretch;
-  justify-items:stretch;
-  /*display: flex;*/
+  padding: 5pt;
+  display: flex;
+}
+
+.search-root{
+  width: auto;
+  display: flex;
+  min-width: 100%;
+}
+
+.search-bar{
+  width: 50%;
+  min-width: 300pt;
+}
+
+.search-results{
+  width: 50%;
+  min-width: 300pt;
+}
+
+.fields-container{
   display: inline-block;
-  zoom: 1;
-  text-align: center;
+}
+
+select{
+  width: inherit;
+  overflow: auto;
 }

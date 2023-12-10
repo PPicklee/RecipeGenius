@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from "react";
 import axios from "axios";
-import {Col, Row, Container, Button, Card, CardBody} from "react-bootstrap";
+import {Col, Row, Container, Button, Card, CardBody, CardHeader} from "react-bootstrap";
 
 
 const Inventory = () => {
@@ -101,33 +101,39 @@ const Inventory = () => {
         <>
             <Container fluid>
                 <h2>Inventory</h2>
+                <hr/>
                 <Row>
                     <Col lg={4}>
                         <h3>Search</h3>
-                        <hr></hr>
+                        <hr/>
                         {selectedIngredient !== undefined && selectedIngredient !== '' && (
                             <div>
-                                <h4>Selected Ingredient</h4>
-
+                                <h5>Selected Ingredient:</h5>
                                 <ul className="ingredient-search-selected">
                                     <li className="ingredient-search-selected">
-                                        {selectedIngredient.name}
-                                        <input type="number" placeholder="Quantity" value={quantity}
-                                               className="ingredient-search-selected"
-                                               onChange={(e) => setQuantity(e.target.value)}/>
-                                        <button onClick={addIngredient}>Add Ingredient</button>
+                                        <Card>
+                                            <h3>{selectedIngredient.name}</h3>
+                                            <input type="number" placeholder="Quantity" value={quantity}
+                                                   className="ingredient-search-selected"
+                                                   onChange={(e) => setQuantity(e.target.value)}/>
+                                            <button onClick={addIngredient}>Add Ingredient</button>
+                                        </Card>
                                     </li>
                                 </ul>
+                                <hr/>
                             </div>
+
                         )}
-                        <hr></hr>
                         <div className="ingredient-search-searchbar">
                             <input type="text" placeholder="Search for Ingredients" value={searchTerm}
                                    className="ingredient-search-searchbar"
                                    onChange={(e) => setSearchTerm(e.target.value)}/>
                             <button onClick={searchIngredients} className="ingredient-search-searchbar">Search</button>
                         </div>
+
                         <div>
+                            <h4>Results:</h4>
+                            <hr/>
                             {searchResult.map((item, index) => (
                                 <li key={index} onClick={() => setSelectedIngredient(item)}
                                     className="ingredient-search-result">
@@ -137,32 +143,35 @@ const Inventory = () => {
                         </div>
                     </Col>
                     <Col lg={4}>
-                        <h3>Items</h3>
+                        <h3>Items</h3><hr/>
                         <ul>
                             {inventory && inventory.length > 0 && inventory.map((item, index) => (
                                 <li key={index} className="inventory-item">
-                                    <Card>
-                                        <CardBody>
+                                    <Card className="inventory-item">
+                                        <div>
                                             <Row>
-                                            <Col>{item.name} - Quantity: {/*{item.quantity}*/}</Col>
-                                            <Col><input type="number"
-                                                   value={item.newQuantity !== undefined ? item.newQuantity : item.quantity}
-                                                   onChange={(e) => {
-                                                       const updatedInventory = [...inventory];
-                                                       updatedInventory[index].newQuantity = parseInt(e.target.value, 10);
-                                                       setInventory(updatedInventory);
-                                                       const newQuantity = item.newQuantity
-                                                       updateIngredient(index, newQuantity)
-                                                   }}
-                                                // onBlur={(e) => {
-                                                //     const newQuantity = item.newQuantity
-                                                //     updateIngredient(index, newQuantity)
-                                                // }}
-                                            />
-                                            </Col>
-                                                <Col><button onClick={() => removeIngredient(index)}>Remove</button></Col>
+                                                <Col><h5>{item.name}</h5></Col>
+                                                <Col>
+                                                    <input type="number"
+                                                           value={item.newQuantity !== undefined ? item.newQuantity : item.quantity}
+                                                           onChange={(e) => {
+                                                               const updatedInventory = [...inventory];
+                                                               updatedInventory[index].newQuantity = parseInt(e.target.value, 10);
+                                                               setInventory(updatedInventory);
+                                                               const newQuantity = item.newQuantity
+                                                               updateIngredient(index, newQuantity)
+                                                           }}
+                                                        // onBlur={(e) => {
+                                                        //     const newQuantity = item.newQuantity
+                                                        //     updateIngredient(index, newQuantity)
+                                                        // }}
+                                                    />
+                                                </Col>
+                                                <Col>
+                                                    <button onClick={() => removeIngredient(index)}>Remove</button>
+                                                </Col>
                                             </Row>
-                                        </CardBody>
+                                        </div>
                                     </Card>
                                 </li>
                             ))}
