@@ -117,6 +117,15 @@ const Inventory = () => {
         }
     }
 
+    // When enter button pressed, submit search
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            console.log("enter")
+            // Trigger the search event
+            searchIngredients()
+        }
+    }
+
     return (
         <>
             <Container fluid>
@@ -146,7 +155,7 @@ const Inventory = () => {
                         )}
                         <div className="ingredient-search-searchbar">
                             <input type="text" placeholder="Search for Ingredients" value={searchTerm}
-                                   className="ingredient-search-searchbar"
+                                   className="ingredient-search-searchbar" onKeyDown={handleKeyPress}
                                    onChange={(e) => setSearchTerm(e.target.value)}/>
                             <button onClick={searchIngredients} className="ingredient-search-searchbar">Search</button>
                         </div>
@@ -154,25 +163,31 @@ const Inventory = () => {
                         <div>
                             <h4>Results:</h4>
                             <hr/>
-                            {searchResult.map((item, index) => (
-                                <li key={index} onClick={() => setSelectedIngredient(item)}
-                                    className="ingredient-search-result">
-                                    <Button className="ingredient-search-result">{item.name}</Button>
-                                </li>
-                            ))}
+                            <Container className="ingredient-search-results">
+                                <Row>
+                                    {searchResult.map((item, index) => (
+                                        <Col key={index} onClick={() => setSelectedIngredient(item)}
+                                             className="ingredient-search-result" sm={3} md={3} lg={3}>
+                                            <Button className="ingredient-search-result-btn">{item.name}</Button>
+                                        </Col>
+                                    ))}
+                                </Row>
+                            </Container>
                         </div>
                     </Col>
+                    <Col lg={3}></Col>
                     <Col lg={4}>
-                        <h3>Items</h3><hr/>
-                        <ul>
+                        <h3>Items</h3>
+                        <hr/>
+                        <ul className="inventory-items">
                             {inventory && inventory.length > 0 && inventory.map((item, index) => (
-                                <li key={index} className="inventory-item">
+                                <li key={index} className="inventory-item-card">
                                     <Card className="inventory-item">
                                         <div>
                                             <Row>
-                                                <Col><h5>{item.name}</h5></Col>
-                                                <Col>
-                                                    <input type="number"
+                                                <Col sm={4} lg={4}><h5>{item.name}</h5></Col>
+                                                <Col sm={4} lg={4}>
+                                                    <input type="number" className="inventory-item-input"
                                                            value={item.newQuantity !== undefined ? item.newQuantity : item.quantity}
                                                            onChange={(e) => {
                                                                const updatedInventory = [...inventory];
@@ -187,8 +202,8 @@ const Inventory = () => {
                                                         // }}
                                                     />
                                                 </Col>
-                                                <Col>
-                                                    <button onClick={() => removeIngredient(index)}>Remove</button>
+                                                <Col sm={4} lg={1}>
+                                                    <Button style={{background:"red", border:"red"}} className="inventory-item-remove" onClick={() => removeIngredient(index)}>Remove</Button>
                                                 </Col>
                                             </Row>
                                         </div>

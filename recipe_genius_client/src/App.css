@@ -128,9 +128,21 @@ h1, h2, h3 {
 }
 
 .ingredient-search-result{
+  /*width: 100%;*/
+  /*font-size:0pt;*/
+  /*margin: 0pt;*/
+}
+
+.ingredient-search-results{
+  height: 50vh;
+  overflow: auto;
+}
+
+.ingredient-search-result-btn{
   width: 100%;
-  list-style-type: none;
-  margin: 1pt;
+  height: 40pt;
+  margin: 2pt;
+
 }
 
 .ingredient-search-selected{
@@ -144,9 +156,30 @@ h1, h2, h3 {
     margin: 5pt;
 }
 
+.inventory-items{
+  height: 70vh;
+  overflow: auto;
+  list-style-type: none;
+}
+
+.inventory-item-card{
+  width: 95%;
+  margin: 2pt;
+  /*display: flex;*/
+}
+
 .inventory-item{
+  text-align: start;
   width: 100%;
   padding: 5pt;
+  padding-left: 5%;
+  margin: 0pt;
+  display: flex;
+}
+
+.inventory-item-input{
+  width: 70pt;
+  height: 3vh;
   display: flex;
 }
 
@@ -158,12 +191,15 @@ h1, h2, h3 {
 
 .search-bar{
   width: 50%;
-  min-width: 300pt;
+  min-width: 20vw;
 }
 
 .search-results{
-  width: 50%;
+  width: 10%;
   min-width: 300pt;
+  height: 80vh;
+  overflow: auto;
+  display: flex;
 }
 
 .fields-container{
