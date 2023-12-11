@@ -1,0 +1,58 @@
+/* Profile.css */
+
+.profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .profile-info {
+    flex-grow: 1;
+  }
+  
+  .profile-info h2 {
+    margin: 0;
+    font-size: 1.5em;
+  }
+  
+  .profile-info p {
+    margin: 5px 0;
+  }
+  
+  .profile-content {
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+  }
+  
+  .bookmarks-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .bookmarks-list li {
+    margin-bottom: 10px;
+  }
+  
+  .bookmarks-list a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  .bookmarks-list a:hover {
+    text-decoration: underline;
+  }
+  

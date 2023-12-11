@@ -6,6 +6,9 @@ const { initializeApp } = require('firebase/app');
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require('firebase/auth');
 const { fileURLToPath } = require('url');
 const { dirname } = require('path');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+
+const uri = "mongodb+srv://TestUser:RecipeGenius123@cluster0.26mtdnl.mongodb.net/?retryWrites=true&w=majority";
 
 const Recipe = require('./models/Recipe');
 
@@ -28,7 +31,14 @@ const firebaseConfig = {
 const appFirebase = initializeApp(firebaseConfig);
 const auth = getAuth(appFirebase);
 
-
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
 
 //=============SETUP=============
 app.use(cors());
@@ -40,17 +50,62 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //=====================FUNCTIONS=============================
 
+// Test function to make sure can connect to DB
+async function runDB() {
+    try {
+        // Connect the client to the server	(optional starting in v4.7)
+        await client.connect();
+        // Send a ping to confirm a successful connection
+        await client.db("Recipes").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+}
+// runDB().catch(console.dir);
+
+// Searches the DB for ingredients given a search term
+app.get('/ingredients', async(req, res) => {
+    // const { searchTerm } = req.body
+    const searchTerm = req.query.term;
+    try {
+        await client.connect(); // Connect to db
+        const database = await client.db("Recipes") // Get the database
+        const collection = database.collection('Ingredients') // Get the Ingredients table
+        // Parse the search term as a regular expression to match ingredients that contains the search term anywhere
+        const regex = new RegExp(searchTerm, 'i')
+        const findQuery = {name: {$regex: regex}}; //Set up find query
+
+        try {
+            const itemsCursor = await collection.find(findQuery).sort({name: 1}); // Initiate the search
+            const itemsArray = await itemsCursor.toArray(); // Convert items returned to array
+            // add a linebreak
+            console.log();
+            res.status(200).json({ itemsArray }) // Send back results
+        } catch (err) {
+            console.error(`Something went wrong trying to find the documents: ${err}\n`);
+            res.status(500).json({error: 'Something went wrong trying to find the documents.'})
+        }
+    } finally {
+        // Ensure the db connection is closed when finished
+        await client.close();
+    }
+})
+
+// Test to see if server can send message to client
 app.get('/message', (req, res) => {
-    // Test to see if server can send message to client
     res.json({ message: "Hello from server!" });
 });
 
+// Returns the recipe object at the specific ID
 app.get('/recipe/:id', async(req,res)=>{
     const { id } = req.params;
     const recipe = await Recipe.getById(id);
     res.json({recipe});
 });
 
+// Given a set of search parameters, returns set of recipes
 app.post('/search', async(req,res)=> {
     console.log("Search Called")
     const { recipeName, limitToInventory, ingredients, dietaryRestrictionsSatisfied, appliancesUsed, estimatedCost } = req.body;
@@ -85,6 +140,43 @@ app.post('/search', async(req,res)=> {
     }
 })();
 
+// Profile route
+app.get('/profile', async (req, res) => {
+    try {
+        const user = await getCurrentUser(req);
+        if (user) {
+            // Assuming your user object contains the necessary information
+            const registeredUser = new RegisteredUser(
+                user.firstName,
+                user.lastName,
+                user.dateOfBirth,
+                user.email,
+                user.password
+            );
+
+            res.json({ registeredUser });
+        } else {
+            res.status(401).json({ message: 'User not authenticated' });
+        }
+    } catch (error) {
+        console.error('Profile Error:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Function to get current user from Firebase authentication
+const getCurrentUser = async (req) => {
+    const token = req.headers.authorization;
+    if (!token) return null;
+
+    try {
+        const userCredential = await auth.verifyIdToken(token);
+        return userCredential && userCredential.user;
+    } catch (error) {
+        console.error('Get User Error:', error.message);
+        return null;
+    }
+};
 
 
 
@@ -131,6 +223,58 @@ app.post('/login', async (req, res) => {
 });
 
 
+/* ==================================== */
+/* ==============INVENTORY============= */
+/* ==================================== */
+
+let inventory = []; // Inventory array
+
+// Returns the user's inventory
+app.get('/inventory', (req, res) => {
+    res.json({ inventory });
+});
+
+// Adds an ingredient to a user's inventory
+app.post('/inventoryAdd', (req, res) => {
+    const { name, quantity } = req.body; // Get ingredient name and quantity from request
+    inventory.push({ name, quantity }); // Add item to inventory array
+    res.status(201).json({ message: 'Ingredient added to inventory.' }); // Send success message
+});
+
+// Removes an ingredient from a user's inventory
+app.post('/inventoryRemove', (req, res) => {
+    const { index } = req.body; // Get index from request
+    if (index >= 0 && index < inventory.length) {
+        inventory.splice(index, 1); // Remove item at the specified index
+        res.json({ message: 'Ingredient removed from inventory.' }); // Send success message
+    } else { // If can't find index in inventory, error
+        res.status(404).json({ error: 'Ingredient at ${index} not found.' });
+    }
+});
+
+// Updates the quantity of an ingredient in a user's inventory
+app.post('/inventoryUpdate', (req, res) => {
+    const { index, newQuantity } = req.body; // Get index and quantity from request
+    // If index valid
+    if (index >= 0 && index < inventory.length) {
+        if (newQuantity >= 0) {
+            inventory[index].quantity = newQuantity; // Update specified ingredient quantity
+            res.json({ message: 'Ingredient quantity updated.' }); // Send success message
+        } else {
+            res.status(400).json({ error: 'Invalid quantity.' });
+        }
+    } else { // If can't find index in inventory, send error
+        res.status(404).json({ error: `Ingredient at index ${index} not found.` });
+    }
+});
+
+// Saves the user's inventory
+app.post('/inventorySave', (req, res) => {
+    const updatedInventory = req.body.inventory; // Get inventory json from request
+    inventory = updatedInventory; // Update the inventory
+    res.status(200).json({ message: 'Inventory updated successfully' });
+});
+
 //======================START============================
 
 
@@ -142,7 +286,7 @@ app.listen(port, () => {
 
 
 
-//==================================================
+// ==================================================
 //Some old code
 
 
