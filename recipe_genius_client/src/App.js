@@ -46,20 +46,12 @@ function App() {
           <header className="App-header">
             <h1 className="header-title">Recipe Genius</h1>
             <div className="user-bar">
-              <ul>
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li>
-                  <Link to="/inventory">Inventory</Link>
-                </li>
-                <li>
-                  <Link to="/register">Register</Link>
-                </li>
-                <li>
-                  <Link to="/profile">Profile</Link>
-                </li>
-              </ul>
+            <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/inventory">Inventory</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/Profile">Profile</a></li>
+                    </ul>
             </div>
             <form
               action="/login"
