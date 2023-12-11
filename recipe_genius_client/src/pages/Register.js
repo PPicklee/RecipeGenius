@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {Col, Row} from "react-bootstrap";
 
 
 const Register = () => {
@@ -39,12 +40,16 @@ const Register = () => {
     return(
         <div>
             <h1>Register</h1>
-            <form onSubmit={handleFormSubmit} method="post">
-                <label htmlFor="email">Email:</label>
-                <input type="email" id="email" name="email" required value={formData.email} onChange={handleChange}/>
+            <form onSubmit={handleFormSubmit} method="post" className="register-form">
+                <Row>
+                    <Col><label htmlFor="email">Email:</label></Col>
+                    <Col><input type="email" id="email" name="email" required value={formData.email} onChange={handleChange}/></Col>
+                </Row>
                 <br/>
-                <label htmlFor="password">Password:</label>
-                <input type="password" id="password" name="password" required value={formData.password} onChange={handleChange}/>
+                <Row>
+                    <Col><label htmlFor="password">Password:</label></Col>
+                    <Col><input type="password" id="password" name="password" required value={formData.password} onChange={handleChange}/></Col>
+                </Row>
                 <br/>
                 <button type="submit">Register</button>
             </form>

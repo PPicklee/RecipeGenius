@@ -1,6 +1,6 @@
 //=============IMPORT DEPENDENCIES=============
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route} from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
 // import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import "./App.css";
@@ -40,13 +40,13 @@ function App() {
             integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
             crossOrigin="anonymous"
           />
-          <link rel="stylesheet" href="styles.css"></link>
+          <link rel="stylesheet" href="./App.css"></link>
         </head>
         <body>
           <header className="App-header">
             <h1 className="header-title">Recipe Genius</h1>
             <div className="user-bar">
-            <ul>
+            <ul className="links-list">
                         <li><a href="/">Home</a></li>
                         <li><a href="/inventory">Inventory</a></li>
                         <li><a href="/register">Register</a></li>
@@ -61,7 +61,9 @@ function App() {
               <Row>
                 <Col>
                   <label htmlFor="email">Email:</label>
-                  <input
+                </Col>
+                <Col>
+                  <input className="login-form-input"
                     type="email"
                     id="email"
                     name="email"
@@ -70,7 +72,9 @@ function App() {
                 </Col>
                 <Col>
                   <label htmlFor="password">Password:</label>
-                  <input
+                </Col>
+                <Col>
+                  <input className="login-form-input"
                     type="password"
                     id="password"
                     name="password"
@@ -95,7 +99,7 @@ function App() {
             </div>
           </main>
           <footer>
-            <p>{message}</p>
+            {/*<p>{message}</p>*/}
           </footer>
         </body>
       </html>

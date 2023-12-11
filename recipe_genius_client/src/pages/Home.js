@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from "react";
 import {Link} from 'react-router-dom';
-import {Col, Row, Card, CardBody, CardGroup, Button} from "react-bootstrap";
+import {Col, Row, Card, Button} from "react-bootstrap";
 import axios from "axios";
 
 
@@ -125,7 +125,9 @@ const Main = () => {
 
     return (
         <div className="container">
-            <h1>Recipe Genius</h1>
+            {/*<h1>Recipe Genius</h1>*/}
+            <hr/>
+            <br/>
             <Row className="search-root">
                 <Col className="search-bar">
                     <div className="fields-container">
@@ -195,9 +197,10 @@ const Main = () => {
                     </div>
                 </Col>
                 <Col className="search-results">
-                    <Row className="recipe-list">
+                    <Row className="">
                         <h3>Recipes</h3>
                         <hr/>
+                        <div className="recipe-list">
                         {recipeList.map((recipe, index) => {
                             console.log(recipe);
                             const recipeNameUrlFriendly = encodeURIComponent(recipe.name); // Make the recipe name URL-friendly
@@ -212,9 +215,11 @@ const Main = () => {
                                 </Card>
                             );
                         })}
+                        </div>
                     </Row>
                 </Col>
             </Row>
+            <hr/>
         </div>
     );
 };

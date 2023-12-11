@@ -31,15 +31,32 @@ function Recipe() {
     }
 
     return (
-        <div>
+        <div className="recipe-page">
             {Object.entries(recipe).filter((_, index) => index !== 0).map(([key, value]) => (
                 <div key={key}>
-                    <h3>{camelCaseToRegularCase(key)}:</h3>
-                    {Array.isArray(value) ? (
-                        value.map((item, index) => <p key={index}>{item}</p>)
+                    {key !== "recipeName" ? (
+                        <h3>{camelCaseToRegularCase(key)}:</h3>
                     ) : (
-                        <p>{value}</p>
-                    )}
+                        <div/>
+                        )}
+                    {/*{Array.isArray(value) ? (*/}
+                    {/*    value.map((item, index) => <p key={index}>{item}</p>)*/}
+                    {/*) : (*/}
+                    {/*    <p>{value}</p>*/}
+                    {/*)}*/}
+
+                    {/*{key}*/}
+
+                    {key === "recipeName" && (<h1>{value}<hr/></h1>)}
+                    {key === "description" && (<p>{value}</p>)}
+                    {key === "instructions" && (<ol className="recipe-list">
+                        {value.map((item, index) => <li key={index}>{item}</li>)}</ol>)}
+                    {key === "videoLink" && (<p>{value}</p>)}
+                    {(key === "ingredients" || key === "ingredientQuantities" || key === "ingredientUnits"
+                        || key === "dietaryRestrictionsSatisfied" || key === "appliancesUsed")
+                        && (<ul className="recipe-list">{value.map((item, index) => <li key={index}>{item}</li>)}</ul>)}
+                    {key === "servings" && (<p>{value}</p>)}
+                    {key === "estimatedCost" && (<p>${value.toFixed(2)}</p>)}
                 </div>
             ))}
         </div>

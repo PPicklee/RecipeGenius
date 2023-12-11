@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
-import {Col, Row, Container, Button, Card, CardBody, CardHeader} from "react-bootstrap";
+import {Col, Row, Container, Button, Card} from "react-bootstrap";
 
 
 const Inventory = () => {
@@ -129,7 +129,7 @@ const Inventory = () => {
     return (
         <>
             <Container fluid>
-                <h2>Inventory</h2>
+                <h1>Inventory</h1>
                 <hr/>
                 <Row>
                     <Col lg={4}>
@@ -213,6 +213,7 @@ const Inventory = () => {
                         </ul>
                     </Col>
                 </Row>
+                <hr/>
             </Container>
         </>
     );

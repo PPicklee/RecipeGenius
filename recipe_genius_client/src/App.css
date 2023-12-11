@@ -54,7 +54,7 @@ header {
   color: #fff;
   padding: 10px;
   display: flex;
-  flex-direction: column;
+  /*flex-direction: column;*/
 }
 
 .header-title {
@@ -67,22 +67,45 @@ header {
   margin-left: 10px;
 }
 
+.links-list{
+  margin-left: 5%;
+  display:flex;
+  list-style: none;
+  padding: 0;
+}
+.links-list li{
+  margin-right: 10px;
+  font-size: 14pt;
+}
+.links-list li a:hover{
+  color:limegreen;
+  /*background-color: red;*/
+}
+
 .login-form {
   max-width: 40%;
   margin: 0 auto;
   align-items: end;
 }
 
+.login-form-input{
+  width: 100pt;
+}
+
+.register-form{
+  margin: 0 40% 0 35%;
+}
+
 label {
-  display: block;
-  margin-bottom: 5px;
+  /*display: block;*/
+  /*margin-bottom: 5px;*/
 }
 
 input {
   width: inherit;
-  padding: 5pt;
+  padding: 3pt;
   /*margin-bottom: 10px;*/
-  margin-left: 1pt;
+  /*margin-left: 1pt;*/
   box-sizing: border-box;
 }
 
@@ -92,11 +115,19 @@ button {
   padding: 10px;
   border: none;
   cursor: pointer;
-  /*margin-left: 100px;*/
+}
+
+Button{
+  padding:4pt;
 }
 
 button:hover {
   background-color: #45a049;
+}
+
+select{
+  width: inherit;
+  overflow: auto;
 }
 
 .title {
@@ -157,7 +188,7 @@ h1, h2, h3 {
 }
 
 .inventory-items{
-  height: 70vh;
+  height: 80vh;
   overflow: auto;
   list-style-type: none;
 }
@@ -197,8 +228,8 @@ h1, h2, h3 {
 .search-results{
   width: 10%;
   min-width: 300pt;
-  height: 80vh;
-  overflow: auto;
+  height: 79vh;
+  /*overflow: auto;*/
   display: flex;
 }
 
@@ -206,7 +237,24 @@ h1, h2, h3 {
   display: inline-block;
 }
 
-select{
-  width: inherit;
+
+
+
+
+
+
+.recipe-page{
+  text-align: center;
+  margin: 0pt 20% 0pt 20%;
+}
+
+.recipe-list{
+  text-align: center;
   overflow: auto;
+  height: 90%;
+}
+
+.recipe-list li {
+  text-align: left;
+  margin: 0 0 0 12%;
 }
