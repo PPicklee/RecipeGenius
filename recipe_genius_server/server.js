@@ -50,6 +50,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //=====================FUNCTIONS=============================
 
+// Test function to make sure can connect to DB
 async function runDB() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
@@ -64,70 +65,47 @@ async function runDB() {
 }
 // runDB().catch(console.dir);
 
-// app.get('/ingredients', async(req, res) => {
-async function testGetDB() {
-    try {
-        await client.connect();
-        const database = await client.db("Recipes")
-        const collection = database.collection('Ingredients')
-        const regex = new RegExp("s", 'i')
-        const findQuery = {name: {$regex: regex}};
-
-        try {
-            const cursor = await collection.find(findQuery).sort({name: 1});
-            await cursor.forEach(ingredient => {
-                console.log(`Ingredient: ${ingredient.name} found.`);
-            });
-            // add a linebreak
-            console.log();
-        } catch (err) {
-            console.error(`Something went wrong trying to find the documents: ${err}\n`);
-        }
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
-}
-// })
-testGetDB().catch(console.dir);
-
+// Searches the DB for ingredients given a search term
 app.get('/ingredients', async(req, res) => {
     // const { searchTerm } = req.body
     const searchTerm = req.query.term;
     try {
-        await client.connect();
-        const database = await client.db("Recipes")
-        const collection = database.collection('Ingredients')
+        await client.connect(); // Connect to db
+        const database = await client.db("Recipes") // Get the database
+        const collection = database.collection('Ingredients') // Get the Ingredients table
+        // Parse the search term as a regular expression to match ingredients that contains the search term anywhere
         const regex = new RegExp(searchTerm, 'i')
-        const findQuery = {name: {$regex: regex}};
+        const findQuery = {name: {$regex: regex}}; //Set up find query
 
         try {
-            const itemsCursor = await collection.find(findQuery).sort({name: 1});
-            const itemsArray = await itemsCursor.toArray();
+            const itemsCursor = await collection.find(findQuery).sort({name: 1}); // Initiate the search
+            const itemsArray = await itemsCursor.toArray(); // Convert items returned to array
             // add a linebreak
             console.log();
-            res.status(200).json({ itemsArray })
+            res.status(200).json({ itemsArray }) // Send back results
         } catch (err) {
             console.error(`Something went wrong trying to find the documents: ${err}\n`);
             res.status(500).json({error: 'Something went wrong trying to find the documents.'})
         }
     } finally {
-        // Ensures that the client will close when you finish/error
+        // Ensure the db connection is closed when finished
         await client.close();
-    } //
+    }
 })
 
+// Test to see if server can send message to client
 app.get('/message', (req, res) => {
-    // Test to see if server can send message to client
     res.json({ message: "Hello from server!" });
 });
 
+// Returns the recipe object at the specific ID
 app.get('/recipe/:id', async(req,res)=>{
     const { id } = req.params;
     const recipe = await Recipe.getById(id);
     res.json({recipe});
 });
 
+// Given a set of search parameters, returns set of recipes
 app.post('/search', async(req,res)=> {
     console.log("Search Called")
     const { recipeName, limitToInventory, ingredients, dietaryRestrictionsSatisfied, appliancesUsed, estimatedCost } = req.body;
@@ -208,18 +186,25 @@ app.post('/login', async (req, res) => {
 });
 
 
+/* ==================================== */
+/* ==============INVENTORY============= */
+/* ==================================== */
+
 let inventory = []; // Inventory array
 
+// Returns the user's inventory
 app.get('/inventory', (req, res) => {
     res.json({ inventory });
 });
 
+// Adds an ingredient to a user's inventory
 app.post('/inventoryAdd', (req, res) => {
     const { name, quantity } = req.body; // Get ingredient name and quantity from request
     inventory.push({ name, quantity }); // Add item to inventory array
     res.status(201).json({ message: 'Ingredient added to inventory.' }); // Send success message
 });
 
+// Removes an ingredient from a user's inventory
 app.post('/inventoryRemove', (req, res) => {
     const { index } = req.body; // Get index from request
     if (index >= 0 && index < inventory.length) {
@@ -230,6 +215,7 @@ app.post('/inventoryRemove', (req, res) => {
     }
 });
 
+// Updates the quantity of an ingredient in a user's inventory
 app.post('/inventoryUpdate', (req, res) => {
     const { index, newQuantity } = req.body; // Get index and quantity from request
     // If index valid
@@ -245,9 +231,10 @@ app.post('/inventoryUpdate', (req, res) => {
     }
 });
 
+// Saves the user's inventory
 app.post('/inventorySave', (req, res) => {
     const updatedInventory = req.body.inventory; // Get inventory json from request
-    inventory = updatedInventory; //
+    inventory = updatedInventory; // Update the inventory
     res.status(200).json({ message: 'Inventory updated successfully' });
 });
 
@@ -262,7 +249,7 @@ app.listen(port, () => {
 
 
 
-//==================================================
+// ==================================================
 //Some old code
 
 

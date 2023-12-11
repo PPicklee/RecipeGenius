@@ -4,34 +4,45 @@ import {Col, Row, Container, Button, Card, CardBody, CardHeader} from "react-boo
 
 
 const Inventory = () => {
+    // Getter and setter Variables
     const [selectedIngredient, setSelectedIngredient] = useState(''); // State to hold the selected item
     const [quantity, setQuantity] = useState(1);
     const [inventory, setInventory] = useState([]);
 
+    // Logic to run on page load
     useEffect(() => {
         // getInventory(); // Get inventory data on load
-        const savedInventory = localStorage.getItem('inventory');
-        if (savedInventory) {
-            setInventory(JSON.parse(savedInventory));
-        }
+        // Get inventory data on load from local browser storage
+        const savedInventory = JSON.parse(localStorage.getItem('inventory'));
+        // console.log("Inventory:", inventory, typeof inventory);
+        // console.log("Local Storage: ", savedInventory, typeof savedInventory);
+
+        //Set Inventory and save it
+        setInventory(savedInventory);
+        saveInventory(savedInventory)
+        // console.log("Inventory:", savedInventory, typeof savedInventory);
 
         searchIngredients() // Load ingredients on page load
     }, []);
 
+    // Saves the current inventory with the items and quantities
     const saveInventory = (updatedInventory) => {
-        setInventory(updatedInventory);
-        localStorage.setItem('inventory', JSON.stringify(updatedInventory));
+        setInventory(updatedInventory); //Updates the variable
+        localStorage.setItem('inventory', JSON.stringify(updatedInventory)); // Save to local storage
+
         // Save on backend
         try {
-            axios.post('http://localhost:3001/inventorySave', {inventory: updatedInventory})
+            axios.post('http://localhost:3001/inventorySave', {inventory: updatedInventory}) // Make pose request
         } catch (err) {
             console.error('Error saving inventory', err);
         }
     }
 
+    // Gets the Inventory from the backend
     const getInventory = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/inventory');
+            const response = await axios.get('http://localhost:3001/inventory'); // Make get request
+            // Set variable and save
             setInventory(response.data.inventory);
             saveInventory(response.data.inventory);
         } catch (error) {
@@ -39,23 +50,28 @@ const Inventory = () => {
         }
     };
 
+    // Adds an ingredient to the inventory
     const addIngredient = async () => {
-        const name = selectedIngredient.name
+        const name = selectedIngredient.name // Get name from selected
+        // If quantity and name are valid
         if ((quantity >= 0 && quantity !== undefined) && (name !== undefined && name !== '')) {
             try {
-                await axios.post('http://localhost:3001/inventoryAdd', {name, quantity});
+                await axios.post('http://localhost:3001/inventoryAdd', {name, quantity}); // Make post request
+
                 // Reset variables
                 setSelectedIngredient('');
                 setQuantity(1);
+
                 getInventory(); // Get updated inventory after adding ingredient
             } catch (error) {
                 console.error('Error adding item:', error);
             }
         } else {
-            window.alert('Invalid Selection or Quantity.');
+            window.alert('Invalid Selection or Quantity.'); // Tell user if invalid selection or quantity
         }
     };
 
+    // Removes an ingredient from user's inventory
     const removeIngredient = async (index) => {
         try {
             // const updatedInventory = [...inventory];
@@ -70,8 +86,9 @@ const Inventory = () => {
         }
     };
 
+    // Updates quantity of an ingredient in user's inventory
     const updateIngredient = async (index, newQuantity) => {
-        if (newQuantity >= 0 && newQuantity !== undefined) {
+        if (newQuantity >= 0 && newQuantity !== undefined) { // Check if valid quantity
             try {
                 // Send index of ingredient and its new quantity to backend
                 await axios.post('http://localhost:3001/inventoryUpdate', {index, newQuantity});
@@ -80,16 +97,19 @@ const Inventory = () => {
                 console.error('Error updating quantity:', error);
             }
         } else {
-            window.alert('Invalid Quantity.');
+            window.alert('Invalid Quantity.'); // Tell user if quantity invalid
         }
     };
 
+    // Search getter and setter variables
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResult, setSearchResult] = useState([]);
+    // Asks the backend to search the database for
     const searchIngredients = async () => {
-        // const searchTerm = "s";
         try {
+            // Make search request to backend
             const response = await axios.get(`http://localhost:3001/ingredients?term=${searchTerm}`);
+            // Set search results
             console.log(response.data.itemsArray)
             setSearchResult(response.data.itemsArray)
         } catch (error) {
